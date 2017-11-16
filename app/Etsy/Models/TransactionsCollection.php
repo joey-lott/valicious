@@ -25,4 +25,8 @@ class TransactionsCollection {
     return $array;
   }
 
+  public function get($key) {
+    return $this->transactions->get($key);
+  }
+
 }

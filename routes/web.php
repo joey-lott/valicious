@@ -20,3 +20,5 @@ Route::get('/authorize/finalize', 'EtsyAuthController@finalizeAuthorization')->n
 Route::get('/receipts', 'ReceiptsController@index');
 Route::get('/transactions', 'TransactionsController@index');
 Route::post('/order-processed', 'OrdersProcessedController@markAsProcessed');
+
+Route::post('/receipt/shipped', 'ReceiptsController@markAsShippedForm');

@@ -16,13 +16,17 @@ class ReceiptsController extends Controller
       $receipts = $receipt->fetchAllReceipts($page);
       $receipts = $this->filterReceiptsAlreadyProcessed($receipts);
       $areMorePages = $receipts->count > ($page * $receiptsPerPage);
-      return view("receipts.index", ["collection" => $receipts, "page" => $page, "receiptsPerPage" => $receiptsPerPage, "areMorePages" => $areMorePages]);
+      return view("receipts.index", ["collection" => $receipts, "page" => $page, "receiptsPerPage" => $receiptsPerPage, "areMorePages" => $areMorePages, "show" => $request->show]);
+    }
+
+    public function markAsShippedForm(Request $request) {
+      return view("receipts.markAsShipped", ["redirectTo" => $request->redirectTo, "receiptId" => $request->receiptId]);
     }
 
     private function filterReceiptsAlreadyProcessed($receipts) {
       foreach($receipts->receipts as $receipt) {
         $processed = OrdersProcessed::where("receiptId", $receipt->id)->get();
-        $receipt->hideFromView = count($processed) > 0;
+        $receipt->processed = count($processed) > 0;
       }
       return $receipts;
     }

@@ -15,7 +15,7 @@ class Receipt extends EtsyModel {
   public $listings;
   public $grandTotal;
 
-  public $hideFromView;
+  public $processed;
 
   public function __construct() {
     parent::__construct();

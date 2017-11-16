@@ -12,27 +12,52 @@
                   <div class="row">
                     There are {{$collection->count}} unshipped orders
                   </div>
+                  <div class="row">
+                    &nbsp;
+                  </div>
+
+                  <div class="row">
+
+                    <form action="/receipts" method="get">
+                      {{csrf_field()}}
+                      <input type="hidden" name="page" value="{{$page}}">
+                      <div class="col-md-3">
+                        <select class="form-control" name="show">
+                          <option value="all">all</option>
+                          <option value="not_processed" <?php if($show == "not_processed") echo "selected";?>>not processed</option>
+                          <option value="not_shipped" <?php if($show == "not_shipped") echo "selected";?>>processed but not shipped</option>
+                        </select>
+                      </div>
+                      <div class="col-md-9">
+                        <button class="btn">update view</button>
+                      </div>
+                    </form>
+                  </div>
+
 
                   <div class="row">
                     <div class="col-md-4"><strong>SHIP TO</strong></div>
                     <div class="col-md-8">
                       <div class="row">
-                        <div class="col-md-5">PRODUCT</div>
-                        <div class="col-md-2">QUANTITY</div>
-                        <div class="col-md-5">OPTIONS</div>
+                        <div class="col-md-5"><strong>PRODUCT</strong></div>
+                        <div class="col-md-2"><strong>QNTY</strong></div>
+                        <div class="col-md-5"><strong>OPTIONS</strong></div>
                       </div>
                     </div>
                   </div>
                   @foreach($collection->receipts as $receipt)
-                    @if(!$receipt->hideFromView)
-                      <div class="row" style="border:1px solid #CCCCCC; padding: 5px">
+                    @if((!$receipt->processed && $show == "not_processed") || ($show == "all" || !isset($show)) || ($show == "not_shipped" && $receipt->processed))
+                      <div class="well row">
                         <div class="col-md-12">
                           <div class="row">
                             <div class="col-md-4"><pre>{{$receipt->formattedAddress}}</pre></div>
                             <div class="col-md-8">
-                              @foreach($receipt->transactions as $transaction)
+                              <?php for($i = 0; $i < count($receipt->transactions); $i++) {
+                                $transaction = $receipt->transactions[$i];
+                                $listing = $receipt->listings[$i];
+                                ?>
                                 <div class="row">
-                                  <div class="col-md-5">{{$transaction->title}}</div>
+                                  <div class="col-md-5">{{$transaction->title}} <a href="{{$listing->getEtsyLink()}}">(link)</a></div>
                                   <div class="col-md-2">{{$transaction->quantity}}</div>
                                   <div class="col-md-5">
                                     @foreach($transaction->variations as $variation)
@@ -42,30 +67,58 @@
                                     @endforeach
                                   </div>
                                 </div>
-                              @endforeach
+                                <div class="row">&nbsp;</div>
+                              <?php } ?>
                             </div>
                           </div>
                           <div class="row">
                             <div class="col-md-12">
-                              <form action="/order-processed" method="post">
-                                {{csrf_field()}}
-                                <input type="hidden" name="receiptId" value="{{$receipt->id}}">
-                                <input type="hidden" name="redirectTo" value="/receipts">
-                                <button class="btn btn-primary">
-                                  mark as processed
-                                </button>
-                              </form>
+                              @if(!$receipt->processed)
+                                <form action="/order-processed" method="post">
+                                  {{csrf_field()}}
+                                  <input type="hidden" name="receiptId" value="{{$receipt->id}}">
+                                  <input type="hidden" name="redirectTo" value="/receipts?page={{$page}}&show={{$show}}">
+                                  <button class="btn btn-primary">
+                                    MARK AS PROCESSED
+                                  </button>
+                                </form>
+                              @else
+                                <form action="/receipt/ship" method="post">
+                                  {{csrf_field()}}
+                                  <input type="hidden" name="receiptId" value="{{$receipt->id}}">
+                                  <input type="hidden" name="redirectTo" value="/receipts?page={{$page}}&show={{$show}}">
+                                  <button class="btn btn-success">
+                                    MARK AS SHIPPED WITH TRACKING NUMBER
+                                  </button>
+                                </form>
+
+                              @endif
                             </div>
                           </div>
                         </div>
                       </div>
+                      <div class="row">&nbsp;</div>
                     @endif
                   @endforeach
                   @if($page > 1)
-                  <a href="/receipts?page={{$page-1}}" class="btn">Previous Page of Results</a>
+                    <form action="/receipts" method="get">
+                      {{csrf_field()}}
+                      <input type="hidden" name="page" value="{{$page-1}}">
+                      <input type="hidden" name="show" value="{{$show}}">
+                      <div class="col-md-9">
+                        <button class="btn">&#60;&#60; Previous</button>
+                      </div>
+                    </form>
                   @endif
                   @if($areMorePages)
-                  <a href="/receipts?page={{$page+1}}" class="btn">Next Page of Results</a>
+                    <form action="/receipts" method="get">
+                      {{csrf_field()}}
+                      <input type="hidden" name="page" value="{{$page+1}}">
+                      <input type="hidden" name="show" value="{{$show}}">
+                      <div class="col-md-9">
+                        <button class="btn">Next &#62;&#62;</button>
+                      </div>
+                    </form>
                   @endif
                 </div>
             </div>
