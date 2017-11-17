@@ -48,4 +48,26 @@ class Receipt extends EtsyModel {
     return $receiptsCollection;
   }
 
+  public function getListingsTitles() {
+    $titles = [];
+    foreach($this->listings as $listing) {
+      $titles[] = $listing->title;
+    }
+    return $titles;
+  }
+
+  public function markAsShipped($trackingNumber, $carrier) {
+
+    // First, updte the receipt. Set was_shipped to true.
+    $endpoint = "receipts/".$this->id;
+    $params = ["was_shipped" => "true"];
+    $response = $this->etsyApi->callOAuth($endpoint, $params, OAUTH_HTTP_METHOD_PUT);
+
+    // Next, set the tracking information
+    $shopId = auth()->user()->etsyAuth->shopId;
+    $endpoint = "shops/".$shopId."/receipts/".$this->id."/tracking";
+    $params = ["tracking_code" => $trackingNumber, "carrier_name" => $carrier, "send_bcc" => "true"];
+    $response = $this->etsyApi->callOAuth($endpoint, $params, OAUTH_HTTP_METHOD_POST);
+  }
+
 }

@@ -48,6 +48,7 @@
                   @foreach($collection->receipts as $receipt)
                     @if((!$receipt->processed && $show == "not_processed") || ($show == "all" || !isset($show)) || ($show == "not_shipped" && $receipt->processed))
                       <div class="well row">
+                        <a id="{{$receipt->id}}"></a>
                         <div class="col-md-12">
                           <div class="row">
                             <div class="col-md-4"><pre>{{$receipt->formattedAddress}}</pre></div>
@@ -71,13 +72,14 @@
                               <?php } ?>
                             </div>
                           </div>
+                          <div class="row">Paid: {{$receipt->grandTotal}}</div>
                           <div class="row">
                             <div class="col-md-12">
                               @if(!$receipt->processed)
                                 <form action="/order-processed" method="post">
                                   {{csrf_field()}}
                                   <input type="hidden" name="receiptId" value="{{$receipt->id}}">
-                                  <input type="hidden" name="redirectTo" value="/receipts?page={{$page}}&show={{$show}}">
+                                  <input type="hidden" name="redirectTo" value="/receipts?page={{$page}}&show={{$show}}#{{$receipt->id}}">
                                   <button class="btn btn-primary">
                                     MARK AS PROCESSED
                                   </button>
@@ -86,7 +88,9 @@
                                 <form action="/receipt/ship" method="post">
                                   {{csrf_field()}}
                                   <input type="hidden" name="receiptId" value="{{$receipt->id}}">
-                                  <input type="hidden" name="redirectTo" value="/receipts?page={{$page}}&show={{$show}}">
+                                  <input type="hidden" name="receiptTitle" value="{{implode(",", $receipt->getListingsTitles())}}">
+                                  <input type="hidden" name="receiptAddress" value="{{$receipt->formattedAddress}}">
+                                  <input type="hidden" name="redirectTo" value="/receipts?page={{$page}}&show={{$show}}<?php if(isset($previousAnchor)) echo '#'.$previousAnchor; ?>">
                                   <button class="btn btn-success">
                                     MARK AS SHIPPED WITH TRACKING NUMBER
                                   </button>
@@ -99,6 +103,7 @@
                       </div>
                       <div class="row">&nbsp;</div>
                     @endif
+                    <?php $previousAnchor = $receipt->id; // This is to redirect to the previous anchor after marking as shipped. ?>
                   @endforeach
                   @if($page > 1)
                     <form action="/receipts" method="get">

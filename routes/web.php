@@ -21,4 +21,5 @@ Route::get('/receipts', 'ReceiptsController@index');
 Route::get('/transactions', 'TransactionsController@index');
 Route::post('/order-processed', 'OrdersProcessedController@markAsProcessed');
 
-Route::post('/receipt/shipped', 'ReceiptsController@markAsShippedForm');
+Route::post('/receipt/ship', 'ReceiptsController@markAsShippedForm');
+Route::post('/receipt/shipped', 'ReceiptsController@markAsShippedSubmit');

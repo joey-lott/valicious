@@ -10,7 +10,7 @@ class EtsyAuthController extends Controller
 {
     public function authLink() {
       $etsyApi = resolve("\App\Etsy\EtsyAPI");
-      $link = $etsyApi->getEtsyAuthorizeLink("transactions_r%20transactions_w");
+      $link = $etsyApi->getEtsyAuthorizeLink("transactions_w%20transactions_r");
       return view("etsyinit.authorizelink", ["link" => $link]);
     }
 

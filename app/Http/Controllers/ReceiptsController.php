@@ -20,7 +20,15 @@ class ReceiptsController extends Controller
     }
 
     public function markAsShippedForm(Request $request) {
-      return view("receipts.markAsShipped", ["redirectTo" => $request->redirectTo, "receiptId" => $request->receiptId]);
+      return view("receipts.markAsShipped", ["redirectTo" => $request->redirectTo, "receiptId" => $request->receiptId, "receiptTitle" => $request->receiptTitle, "address" => $request->receiptAddress]);
+    }
+
+    public function markAsShippedSubmit(Request $request) {
+      $this->validate($request, ["trackingNumber" => "required"]);
+      $receipt = new Receipt();
+      $receipt->id = $request->receiptId;
+      $receipt->markAsShipped($request->trackingNumber, $request->carrier);
+      return redirect($request->redirectTo);
     }
 
     private function filterReceiptsAlreadyProcessed($receipts) {
