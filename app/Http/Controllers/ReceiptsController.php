@@ -9,6 +9,11 @@ use App\OrdersProcessed;
 class ReceiptsController extends Controller
 {
 
+  public function __construct() {
+    $this->middleware('auth');
+    $this->middleware('subscribed');
+  }
+
     public function index(Request $request) {
       $page = isset($request->page) ? $request->page : 1;
       $receiptsPerPage = isset($request->receiptsPerPage) ? $request->receiptsPerPage : 50;

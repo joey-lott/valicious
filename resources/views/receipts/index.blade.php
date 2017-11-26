@@ -51,7 +51,14 @@
                         <a id="{{$receipt->id}}"></a>
                         <div class="col-md-12">
                           <div class="row">
-                            <div class="col-md-4"><pre>{{$receipt->formattedAddress}}</pre></div>
+                            <div class="col-md-4">
+                              <pre>{{$receipt->formattedAddress}}</pre><br>
+                              <?php
+                                $nameParts = explode(" ", $receipt->name);
+                                $lastName = array_pop($nameParts);
+                              ?>
+                              <a href="https://www.gearbubble.com/dropship_users/dashboard?name={{$lastName}}" target="new">look up on gearbubble</a>
+                            </div>
                             <div class="col-md-8">
                               <?php for($i = 0; $i < count($receipt->transactions); $i++) {
                                 $transaction = $receipt->transactions[$i];
@@ -72,7 +79,18 @@
                               <?php } ?>
                             </div>
                           </div>
-                          <div class="row">Paid: {{$receipt->grandTotal}}</div>
+                          <div class="row">
+                            <div class="col-md-4">
+                              Paid: {{$receipt->grandTotal}}
+                            </div>
+                            <div class="col-md-8">
+                              <?php
+                                $cDate = new \Carbon\Carbon("@".$receipt->purchaseDate);
+                                $displayDate = $cDate->toDayDateTimeString();
+                              ?>
+                              Purchased On: {{$displayDate}} UTC
+                            </div>
+                          </div>
                           <div class="row">
                             <div class="col-md-12">
                               @if(!$receipt->processed)

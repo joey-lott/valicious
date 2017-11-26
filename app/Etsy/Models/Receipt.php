@@ -14,6 +14,8 @@ class Receipt extends EtsyModel {
   public $transactions;
   public $listings;
   public $grandTotal;
+  public $name;
+  public $purchaseDate;
 
   public $processed;
 
@@ -37,6 +39,8 @@ class Receipt extends EtsyModel {
       $receipt->wasPaid = $r->was_paid;
       $receipt->wasShipped = $r->was_shipped;
       $receipt->grandTotal = $r->grandtotal;
+      $receipt->name = $r->name;
+      $receipt->purchaseDate = $r->creation_tsz;
       $receipt->transactions = TransactionsCollection::createInnerArray($r->Transactions);
       $receipt->listings = ListingCollection::createInnerArray($r->Listings);
       $receipts[] = $receipt;

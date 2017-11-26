@@ -8,6 +8,13 @@ use App\EtsyAuth;
 
 class EtsyAuthController extends Controller
 {
+
+  public function __construct() {
+    $this->middleware('auth');
+    $this->middleware('subscribed');
+  }
+
+
     public function authLink() {
       $etsyApi = resolve("\App\Etsy\EtsyAPI");
       $link = $etsyApi->getEtsyAuthorizeLink("transactions_w%20transactions_r");

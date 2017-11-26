@@ -8,6 +8,11 @@ use App\Etsy\Models\Transaction;
 class TransactionsController extends Controller
 {
 
+  public function __construct() {
+    $this->middleware('auth');
+    $this->middleware('subscribed');
+  }
+
     public function index(Request $request) {
       $page = isset($request->page) ? $request->page : 1;
       $transaction = new Transaction();

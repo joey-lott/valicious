@@ -7,6 +7,12 @@ use App\ApiKeys;
 
 class ApiKeysController extends Controller
 {
+
+  public function __construct() {
+    $this->middleware('auth');
+    $this->middleware('subscribed');
+  }
+  
     public function form() {
       return view("etsyinit.apikeyform");
     }

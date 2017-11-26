@@ -35,6 +35,12 @@
                             </div>
                         </div>
                     </form>
+                    <div class="row">
+                      <span class="col-sm-12"><a href="https://www.etsy.com/developers/your-apps">find them here</a>
+                    </div>
+                    <div class="row">
+                      <span class="col-sm-12"><a href="https://www.etsy.com/developers/register">or create a new Etsy app here</a>
+                    </div>
                 </div>
             </div>
         </div>
