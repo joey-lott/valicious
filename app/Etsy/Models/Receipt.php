@@ -16,7 +16,11 @@ class Receipt extends EtsyModel {
   public $grandTotal;
   public $name;
   public $purchaseDate;
-
+  public $firstLine;
+  public $secondLine;
+  public $city;
+  public $zip;
+  public $state;
   public $processed;
 
   public function __construct() {
@@ -31,6 +35,7 @@ class Receipt extends EtsyModel {
     $receipts = [];
     foreach($receiptsArray as $r) {
       $r = (object) $r;
+
       $receipt = new Receipt();
       $receipt->id = $r->receipt_id;
       $receipt->orderId = $r->order_id;
@@ -40,6 +45,11 @@ class Receipt extends EtsyModel {
       $receipt->wasShipped = $r->was_shipped;
       $receipt->grandTotal = $r->grandtotal;
       $receipt->name = $r->name;
+      $receipt->firstLine = $r->first_line;
+      $receipt->secondLine = $r->second_line;
+      $receipt->city = $r->city;
+      $receipt->state = $r->state;
+      $receipt->zip = $r->zip;
       $receipt->purchaseDate = $r->creation_tsz;
       $receipt->transactions = TransactionsCollection::createInnerArray($r->Transactions);
       $receipt->listings = ListingCollection::createInnerArray($r->Listings);
