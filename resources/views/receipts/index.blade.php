@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -50,101 +51,19 @@
 
                   @foreach($collection->receipts as $receipt)
                     @if((!$receipt->processed && $show == "not_processed") || ($show == "all" || !isset($show)) || ($show == "not_shipped" && $receipt->processed))
+                    <?php
+                      $nameParts = explode(" ", $receipt->name);
+                      $lastName = array_pop($nameParts);
+                      $firstName = implode(" ", $nameParts);
+                      $addressParts = explode("\n", $receipt->formattedAddress);
+                      $country = array_pop($addressParts);
+                    ?>
                       <div class="well row">
                         <a id="{{$receipt->id}}"></a>
                         <div class="col-md-12">
                           <span>Order # {{$receipt->id}}</span>
                           <div class="row">
                             <div class="col-md-4">
-                              <?php
-                                $nameParts = explode(" ", $receipt->name);
-                                $lastName = array_pop($nameParts);
-                                $firstName = implode(" ", $nameParts);
-                                $addressParts = explode("\n", $receipt->formattedAddress);
-                                $country = array_pop($addressParts);
-                              ?>
-                              @if(!$receipt->processed)
-                              <a href="javascript:openNewOrderWindow()">place order on gearbubble</a>
-                              <form>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <label>First Name</label>
-                                    <button id="first-name-copy" disabled style="visibility: hidden">&nbsp;</button>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <input type="text" value="{{$firstName}}" class="form-control" readonly onclick="copyToClipboard(this, 'first-name-copy')">
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <label>Last Name</label>
-                                    <button id="last-name-copy" disabled style="visibility: hidden">&nbsp;</button>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <input type="text" value="{{$lastName}}" class="form-control" readonly onclick="copyToClipboard(this, 'last-name-copy')">
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <label>Address Line 1</label>
-                                    <button id="address-1-copy" disabled style="visibility: hidden">&nbsp;</button>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <input type="text" value="{{$receipt->firstLine}}" class="form-control" readonly onclick="copyToClipboard(this, 'address-1-copy')">
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <label>Address Line 2</label>
-                                    <button id="address-2-copy" disabled style="visibility: hidden">&nbsp;</button>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <input type="text" value="{{$receipt->secondLine}}" class="form-control" readonly onclick="copyToClipboard(this, 'address-2-copy')">
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <label>City</label>
-                                    <button id="city-copy" disabled style="visibility: hidden">&nbsp;</button>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <input type="text" value="{{$receipt->city}}" class="form-control" readonly onclick="copyToClipboard(this, 'city-copy')">
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <label>Postal Code</label>
-                                    <button id="zip-copy" disabled style="visibility: hidden">&nbsp;</button>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <input type="text" value="{{$receipt->zip}}" class="form-control" readonly onclick="copyToClipboard(this, 'zip-copy')">
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <label>County</label>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <input type="text" value="{{$country}}" class="form-control" readonly onclick="copyToClipboard(this)">
-                                  </div>
-                                </div>
-                              </form>
-                              <br>
-                              @endif
                               <pre>{{$receipt->formattedAddress}}</pre>
                               @if($receipt->processed)
                                 <a href="https://www.gearbubble.com/dropship_users/dashboard?name={{$lastName}}" target="new">look up on gearbubble</a>
@@ -207,6 +126,9 @@
                                 </form>
 
                               @endif
+                              @if(!$receipt->processed)
+                                @include("receipts.partials.addressToCopy")
+                              @endif
                             </div>
                           </div>
                         </div>
@@ -255,14 +177,18 @@
     console.log(firstName);
   }
 
+  var copyIndicator;
+
   function copyToClipboard(input, indicatorId) {
-    console.log(input);
     input.select();
     document.execCommand("copy");
-    var indicator = document.getElementById(indicatorId);
-    console.log(indicator);
-    indicator.innerHTML = "copied";
-    indicator.style.visibility = "visible";
+    copyIndicator = document.getElementById(indicatorId);
+    copyIndicator.style.visibility = "visible";
+    setTimeout(hideIndicator, 2000)
+  }
+
+  function hideIndicator() {
+    copyIndicator.style.visibility = "hidden";
   }
 
 </script>
