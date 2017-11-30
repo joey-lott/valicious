@@ -12,30 +12,42 @@
 
                   <div class="row">
                     <span class="col-md-12">
-                      There are {{$collection->count}} unshipped orders
+                      There are {{$collection->count}} {{$label}}
                     </span>
                   </div>
                   <div class="row">
                     &nbsp;
                   </div>
+                  @if($showAlerts != "true")
+                    <div class="row">
 
-                  <div class="row">
-
-                    <form action="/receipts" method="get">
-                      {{csrf_field()}}
-                      <input type="hidden" name="page" value="{{$page}}">
-                      <div class="col-md-3">
-                        <select class="form-control" name="show">
-                          <option value="all">all</option>
-                          <option value="not_processed" <?php if($show == "not_processed") echo "selected";?>>not processed</option>
-                          <option value="not_shipped" <?php if($show == "not_shipped") echo "selected";?>>processed but not shipped</option>
-                        </select>
+                      <form action="/receipts" method="get">
+                        {{csrf_field()}}
+                        <input type="hidden" name="page" value="{{$page}}">
+                        <div class="col-md-3">
+                          <select class="form-control" name="show">
+                            <option value="all">all</option>
+                            <option value="not_processed" <?php if($show == "not_processed") echo "selected";?>>not processed</option>
+                            <option value="not_shipped" <?php if($show == "not_shipped") echo "selected";?>>processed but not shipped</option>
+                          </select>
+                        </div>
+                        <div class="col-md-9">
+                          <button class="btn">update view</button>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <a href="/receipts?showAlerts=true">VIEW ALERTS</a>
                       </div>
-                      <div class="col-md-9">
-                        <button class="btn">update view</button>
+                    </div>
+                  @else
+                    <div class="row">
+                      <div class="col-md-12">
+                        <a href="/receipts">VIEW ALL RECEIPTS</a>
                       </div>
-                    </form>
-                  </div>
+                    </div>
+                  @endif
                   <div class="row">&nbsp;</div>
 
                   <div class="row">
@@ -57,11 +69,36 @@
                       $firstName = implode(" ", $nameParts);
                       $addressParts = explode("\n", $receipt->formattedAddress);
                       $country = array_pop($addressParts);
+                      $weekAgo = new \DateTime("now");
+                      $week = new \DateInterval("P7D");
+                      $weekAgo->sub($week);
+                      $tenAgo = new \DateTime("now");
+                      $ten = new \DateInterval("P10D");
+                      $tenAgo->sub($ten);
+                      $fortAgo = new \DateTime("now");
+                      $fort = new \DateInterval("P14D");
+                      $fortAgo->sub($fort);
                     ?>
                       <div class="well row">
                         <a id="{{$receipt->id}}"></a>
                         <div class="col-md-12">
-                          <span>Order # {{$receipt->id}}</span>
+
+                          @if($receipt->purchaseDate <= $fortAgo->getTimestamp())
+                          <div class="alert alert-danger">More Than 14 Days</div>
+                          @elseif($receipt->purchaseDate <= $tenAgo->getTimestamp())
+                          <div class="alert alert-warning">More Than 10 Days</div>
+                          @else
+                          <div class="alert alert-warning">More Than 7 Days</div>
+                          @endif
+
+                          <div class="row">
+                            <div class="col-md-3">
+                              <span>Order # {{$receipt->id}}</span>
+                            </div>
+                            <div class="col-md-9">
+                              <a href="https://www.etsy.com/your/orders/{{$receipt->id}}">see on Etsy (send convo to buyer)</a>
+                            </div>
+                          </div>
                           <div class="row">
                             <div class="col-md-4">
                               <pre>{{$receipt->formattedAddress}}</pre>

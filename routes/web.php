@@ -6,7 +6,7 @@ Route::get('/', function () {
 
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-
+use App\Etsy\Models\Receipt;
 Route::get("/search-customer", function(Request $request){
   $client = new Client(["base_uri" => env("APP_URL")]);
   $response = $client->post("/proxy", ["form_params" => ["url" => "https://www.gearbubble.com/dropship_users/dashboard?name={$request->name}"]]);
@@ -14,8 +14,8 @@ Route::get("/search-customer", function(Request $request){
 });
 
 Route::get("/test", function(){
-  return "<form action='/proxy' method='post'>".csrf_field()."<input type='text' name='url'><button>GO</button></form>";
 });
+
 Route::post('/proxy', function(Request $request) {
   $url = $request->url;
   $client = new Client();

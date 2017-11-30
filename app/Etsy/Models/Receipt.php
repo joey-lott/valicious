@@ -27,10 +27,13 @@ class Receipt extends EtsyModel {
     parent::__construct();
   }
 
-  public function fetchAllReceipts($page = 1, $wasPaid = 1, $wasShipped = 0, $limit = 50) {
+  public function fetchAllReceipts($page = 1, $wasPaid = 1, $wasShipped = 0, $limit = 50, $minCreated = null, $maxCreated = null) {
     $shopId = auth()->user()->etsyAuth->shopId;
     $endpoint = "shops/".$shopId."/receipts?includes=Transactions,Listings";
-    $response = $this->etsyApi->callOAuth($endpoint, ["limit" => $limit, "page" => $page, "was_paid" => $wasPaid, "was_shipped" => $wasShipped], OAUTH_HTTP_METHOD_GET);
+    $params = ["limit" => $limit, "page" => $page, "was_paid" => $wasPaid, "was_shipped" => $wasShipped];
+    if($minCreated != null) $params["min_created"] = $minCreated;
+    if($maxCreated != null) $params["max_created"] = $maxCreated;
+    $response = $this->etsyApi->callOAuth($endpoint, $params, OAUTH_HTTP_METHOD_GET);
     $receiptsArray = $response["results"];
     $receipts = [];
     foreach($receiptsArray as $r) {
