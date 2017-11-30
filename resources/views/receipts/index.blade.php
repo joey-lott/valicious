@@ -87,7 +87,7 @@
                           <div class="alert alert-danger">More Than 14 Days</div>
                           @elseif($receipt->purchaseDate <= $tenAgo->getTimestamp())
                           <div class="alert alert-warning">More Than 10 Days</div>
-                          @else
+                          @else($receipt->purchaseDate <= $weekAgo->getTimestamp())
                           <div class="alert alert-warning">More Than 7 Days</div>
                           @endif
 
