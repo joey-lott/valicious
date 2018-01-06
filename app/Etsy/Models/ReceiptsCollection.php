@@ -31,8 +31,8 @@ class ReceiptsCollection {
     // Otherwise, filter by processed/shipped
     $display = [];
     foreach($this->receipts as $receipt) {
-      if($this->filter == "not_processed" && !$receipt->processed) $display[] = $recipt;
-      if($this->filter == "not_shipped" && $receipt->processed) $display[] = $recipt;
+      if($this->filter == "not_processed" && !$receipt->processed) $display[] = $receipt;
+      if($this->filter == "not_shipped" && $receipt->processed) $display[] = $receipt;
     }
     // Run the search filter on the results
     return $this->runSearchFilter($display);
