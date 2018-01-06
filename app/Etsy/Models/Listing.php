@@ -2,6 +2,8 @@
 
 namespace App\Etsy\Models;
 
+use App\ListingImages;
+
 class Listing extends EtsyModel{
 
   public $id;
@@ -13,12 +15,23 @@ class Listing extends EtsyModel{
   }
 
   public function getListingMainImage($pause = false) {
+    $listingImage = ListingImages::where("listingId", $this->id)->get()->first();
+    if($listingImage != null) {
+      // Image is stored in DB. Use that value and return early.
+      $this->mainImageUrl = $listingImage->imageUrl;
+      return;
+    }
+
     $endpoint = "listings/".$this->id."?includes=MainImage";
     $response = $this->etsyApi->callOAuth($endpoint, null, OAUTH_HTTP_METHOD_GET);
     $listing = $response["results"][0];
     $this->mainImageUrl = $listing["MainImage"]["url_170x135"];
+    $listingImage = new ListingImages();
+    $listingImage->listingId = $this->id;
+    $listingImage->imageUrl = $this->mainImageUrl;
+    $listingImage->save();
     if($pause) {
-      sleep(.05);
+      usleep(200000);
     }
   }
 
