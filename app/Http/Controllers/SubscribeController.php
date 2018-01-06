@@ -36,6 +36,8 @@ class SubscribeController extends Controller
       if($request->coupon != "" && $request->coupon != null) {
         $subscriptionRequest = $subscriptionRequest->withCoupon($request->coupon);
       }
+      // this is the link to get information about the version of cashier I am using to support Stripe Connect
+https://github.com/laravel/cashier/issues/406
       try {
         $response = $subscriptionRequest->create($stripeToken, ["email" => $user->email]);
       }

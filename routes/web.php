@@ -7,20 +7,26 @@ Route::get('/', function () {
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Etsy\Models\Receipt;
+use Illuminate\Support\Facades\Cookie;
+
 Route::get("/search-customer", function(Request $request){
   $client = new Client(["base_uri" => env("APP_URL")]);
   $response = $client->post("/proxy", ["form_params" => ["url" => "https://www.gearbubble.com/dropship_users/dashboard?name={$request->name}"]]);
   return $response->getBody()->getContents();
 });
 
-Route::get("/test", function(){
+Route::get("/stripe-return", function(){
 });
 
-Route::post('/proxy', function(Request $request) {
-  $url = $request->url;
-  $client = new Client();
-  $response = $client->get($url);
-  return $response->getBody()->getContents();
+
+Route::get("/affiliate/{id}", function($id) {
+  $hundredYears = 60 * 24 * 365 * 100;
+  Cookie::queue("affiliate-id", $id, $hundredYears);
+  return redirect("/view-affiliate-id");
+});
+
+Route::get("/view-affiliate-id", function() {
+  dump(Cookie::get("affiliate-id"));
 });
 
 Auth::routes();

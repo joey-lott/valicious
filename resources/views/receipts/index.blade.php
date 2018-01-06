@@ -61,8 +61,7 @@
                     </div>
                   </div>
 
-                  @foreach($collection->receipts as $receipt)
-                    @if((!$receipt->processed && $show == "not_processed") || ($show == "all" || !isset($show)) || ($show == "not_shipped" && $receipt->processed))
+                  @foreach($collection->getDisplayReceipts() as $receipt)
                     <?php
                       $nameParts = explode(" ", $receipt->name);
                       $lastName = array_pop($nameParts);
@@ -112,7 +111,10 @@
                                 $listing = $receipt->listings[$i];
                                 ?>
                                 <div class="row">
-                                  <div class="col-md-5">{{$transaction->title}} <a href="{{$listing->getEtsyLink()}}">(link)</a></div>
+                                  <div class="col-md-5">
+                                    {{$transaction->title}} <a href="{{$listing->getEtsyLink()}}">(link)</a><br>
+                                    <img src="{{$listing->mainImageUrl}}">
+                                  </div>
                                   <div class="col-md-2">{{$transaction->quantity}}</div>
                                   <div class="col-md-5">
                                     @foreach($transaction->variations as $variation)
@@ -171,7 +173,6 @@
                         </div>
                       </div>
                       <div class="row">&nbsp;</div>
-                    @endif
                     <?php $previousAnchor = $receipt->id; // This is to redirect to the previous anchor after marking as shipped. ?>
                   @endforeach
                   @if($page > 1)

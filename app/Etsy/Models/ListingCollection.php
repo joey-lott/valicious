@@ -12,6 +12,7 @@ class ListingCollection {
     foreach($results as $listing) {
       $l = new Listing();
       $l->id = $listing["listing_id"];
+      $l->getListingMainImage(true);
       if(isset($listing["title"])) {
         $l->title = $listing["title"];
       }

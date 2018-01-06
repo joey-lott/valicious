@@ -39,6 +39,8 @@ class ReceiptsController extends Controller
       $receipt = new Receipt();
       $receipts = $receipt->fetchAllReceipts($page, 1, 0, $receiptsPerPage, $min, $max);
       $receipts = $this->filterReceiptsAlreadyProcessed($receipts);
+      $receipts->setFilter($request->show);
+//      $receipts->setSearch($request->search);
       if($request->showAlerts == "true") {
         $receipts->order("asc");
       }

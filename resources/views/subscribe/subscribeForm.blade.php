@@ -156,7 +156,6 @@ function handleStripeResponse(result) {
       displayCardError(result.error.message);
       paymentButton.disabled = false;
     } else {
-      // Send the token to the server
       stripeTokenHandler(result.token);
     }
 }
@@ -173,8 +172,6 @@ function stripeTokenHandler(token) {
 
   var subscribeForm = document.getElementById('submit-subscription-form');
   var stripeToken = document.getElementById('stripeToken');
-  console.log(subscribeForm);
-  console.log(stripeToken);
   // Insert the value of the token in a hidden form field
   stripeToken.value = token.id;
   // Submit the form
