@@ -7,6 +7,12 @@ use App\Notes;
 
 class NotesController extends Controller
 {
+
+    public function __construct() {
+      $this->middleware('auth');
+      $this->middleware('subscribed');
+    }
+
     public function showForm(Request $request) {
       return view("notesViews.noteForm", ["receiptId" => $request->receiptId, "redirectTo" => $request->redirectTo]);
     }
