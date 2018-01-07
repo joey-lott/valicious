@@ -49,3 +49,8 @@ Route::post('/order-processed', 'OrdersProcessedController@markAsProcessed');
 
 Route::post('/receipt/ship', 'ReceiptsController@markAsShippedForm');
 Route::post('/receipt/shipped', 'ReceiptsController@markAsShippedSubmit');
+
+Route::get('/receipt/note', 'NotesController@showForm');
+Route::post('/receipt/note/submit', 'NotesController@submitNote');
+Route::get('/receipt/note/delete', 'NotesController@delete');
+Route::get('/receipt/note/resolve', 'NotesController@resolve');

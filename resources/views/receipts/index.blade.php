@@ -86,7 +86,7 @@
                           <div class="alert alert-danger">More Than 14 Days</div>
                           @elseif($receipt->purchaseDate <= $tenAgo->getTimestamp())
                           <div class="alert alert-warning">More Than 10 Days</div>
-                          @else($receipt->purchaseDate <= $weekAgo->getTimestamp())
+                          @elseif($receipt->purchaseDate <= $weekAgo->getTimestamp())
                           <div class="alert alert-warning">More Than 7 Days</div>
                           @endif
 
@@ -170,6 +170,51 @@
                               @endif
                             </div>
                           </div>
+
+                          <div class="row">
+                            <div class="col-md-12">
+                              <form action="/receipt/note" method="get">
+                                {{csrf_field()}}
+                                <input type="hidden" name="receiptId" value="{{$receipt->id}}">
+                                <input type="hidden" name="redirectTo" value="/receipts?page={{$page}}&show={{$show}}<?php if(isset($previousAnchor)) echo '#'.$previousAnchor; ?>">
+                                <button class="btn btn-default">
+                                  ADD NOTE
+                                </button>
+                              </form>
+                            </div>
+                          </div>
+
+                          @foreach($receipt->getNotes() as $note)
+                            <div class="row alert @if($note->requiresResolution && !$note->resolved) alert-warning @else alert-info @endif">
+                              <div class="col-md-1">
+                                <form action="/receipt/note/delete" method="get">
+                                  <input type="hidden" name="noteId" value="{{$note->id}}">
+                                  <input type="hidden" name="redirectTo" value="/receipts?page={{$page}}&show={{$show}}<?php if(isset($previousAnchor)) echo '#'.$previousAnchor; ?>">
+                                  <button class="btn btn-danger">
+                                    x
+                                  </button>
+                                </form>
+                              </div>
+
+                              <div class="col-md-10">
+                                {!!$note->note!!}
+                              </div>
+
+                              <div class="col-md-1">
+                                @if($note->requiresResolution && !$note->resolved)
+                                  <form action="/receipt/note/resolve" method="get">
+                                    <input type="hidden" name="noteId" value="{{$note->id}}">
+                                    <input type="hidden" name="redirectTo" value="/receipts?page={{$page}}&show={{$show}}<?php if(isset($previousAnchor)) echo '#'.$previousAnchor; ?>">
+                                    <button class="btn btn-success">
+                                      rslv
+                                    </button>
+                                  </form>
+                                @endif
+                              </div>
+
+                            </div>
+                          @endforeach
+
                         </div>
                       </div>
                       <div class="row">&nbsp;</div>

@@ -3,6 +3,8 @@
 
 namespace App\Etsy\Models;
 
+use App\Notes;
+
 class Receipt extends EtsyModel {
 
   public $id;
@@ -85,6 +87,11 @@ class Receipt extends EtsyModel {
     $endpoint = "shops/".$shopId."/receipts/".$this->id."/tracking";
     $params = ["tracking_code" => $trackingNumber, "carrier_name" => $carrier, "send_bcc" => "true"];
     $response = $this->etsyApi->callOAuth($endpoint, $params, OAUTH_HTTP_METHOD_POST);
+  }
+
+  public function getNotes() {
+    $notes = Notes::where("receiptId", $this->id)->get()->all();
+    return $notes;
   }
 
 }
