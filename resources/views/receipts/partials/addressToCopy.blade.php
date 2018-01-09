@@ -101,5 +101,4 @@
       <div class="alert alert-success" id="copied-{{$receipt->id}}" style="visibility: hidden">value copied to clipboard</div>
     </div>
   </div>
-  <br>
 </div>

@@ -130,7 +130,8 @@
                           </div>
                           <div class="row">
                             <div class="col-md-4">
-                              Paid: {{$receipt->grandTotal}}
+                              Paid: {{$receipt->grandTotal}}<br>
+                              Shipping: {{$receipt->totalShippingCost}}
                             </div>
                             <div class="col-md-8">
                               <?php
@@ -170,6 +171,16 @@
                               @endif
                             </div>
                           </div>
+
+                          @if(isset($receipt->messageFromBuyer) && $receipt->messageFromBuyer != "")
+                          <div class="row alert alert-info">
+                            <div class="col-md-12">
+                              <label>MESSAGE FROM BUYER</label><br>
+                              {{$receipt->messageFromBuyer}}
+                            </div>
+                          </div>
+                          @endif
+
 
                           <div class="row">
                             <div class="col-md-12">

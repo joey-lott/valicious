@@ -13,6 +13,7 @@ class Receipt extends EtsyModel {
   public $messageFromBuyer;
   public $wasPaid;
   public $wasShipped;
+  public $totalShippingCost;
   public $transactions;
   public $listings;
   public $grandTotal;
@@ -49,6 +50,7 @@ class Receipt extends EtsyModel {
       $receipt->wasPaid = $r->was_paid;
       $receipt->wasShipped = $r->was_shipped;
       $receipt->grandTotal = $r->grandtotal;
+      $receipt->totalShippingCost = $r->total_shipping_cost;
       $receipt->name = $r->name;
       $receipt->firstLine = $r->first_line;
       $receipt->secondLine = $r->second_line;
