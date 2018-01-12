@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Etsy\Models\Receipt;
 use App\OrdersProcessed;
+use App\FollowUp;
 
 class ReceiptsController extends Controller
 {
@@ -57,6 +58,12 @@ class ReceiptsController extends Controller
       $receipt = new Receipt();
       $receipt->id = $request->receiptId;
       $receipt->markAsShipped($request->trackingNumber, $request->carrier);
+
+      $followup = new FollowUp();
+      $followup->receiptId = $receipt->id;
+      $followup->dateShipped = new \DateTime();
+      $followup->save();
+      
       return redirect($request->redirectTo);
     }
 

@@ -14,7 +14,11 @@
                         </div>
                     @endif
 
-                    <a href="/receipts">Your Receipts</a>
+                    <a href="/receipts">Your Receipts</a><br><br>
+                    <hr>
+                    <u>test features</u><br>
+                    <a href="/followups">Your Follow-ups</a><br><br>
+                    <a href="/messages">Your Message Templates</a><br><br>
                 </div>
             </div>
         </div>

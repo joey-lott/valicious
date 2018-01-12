@@ -43,6 +43,14 @@ Route::post('/api-key', 'ApiKeysController@submit');
 Route::get('/authorize', 'EtsyAuthController@authLink');
 Route::get('/authorize/finalize', 'EtsyAuthController@finalizeAuthorization')->name("finalizeAuthorization");
 
+Route::get('/followups', 'FollowUpController@index');
+Route::post('/followups/process', 'FollowUpController@process');
+
+Route::get('/messages', 'FollowUpMessagesController@index');
+Route::get('/messages/new', 'FollowUpMessagesController@messageForm');
+Route::get('/messages/{id}', 'FollowUpMessagesController@editForm');
+Route::post('/messages/save', 'FollowUpMessagesController@saveMessage');
+
 Route::get('/receipts', 'ReceiptsController@index');
 Route::get('/transactions', 'TransactionsController@index');
 Route::post('/order-processed', 'OrdersProcessedController@markAsProcessed');
