@@ -61,9 +61,10 @@ class ReceiptsController extends Controller
 
       $followup = new FollowUp();
       $followup->receiptId = $receipt->id;
+      $followup->userId = auth()->user()->id;
       $followup->dateShipped = new \DateTime();
       $followup->save();
-      
+
       return redirect($request->redirectTo);
     }
 
