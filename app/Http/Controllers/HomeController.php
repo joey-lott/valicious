@@ -29,7 +29,7 @@ class HomeController extends Controller
       $hasApiKey = ApiKeys::where("user_id", auth()->user()->id)->get()->count() > 0;
       $hasEtsyAuth = EtsyAuth::where("user_id", auth()->user()->id)->get()->count() > 0;
       $hasMwsCredentials = MwsCredentials::where("user_id", auth()->user()->id)->get()->count() > 0;
-      if($hasApiKey && $hasEtsyAuth && $hasMwsCredentials) {
+      if($hasApiKey && $hasEtsyAuth) { // don't require mws && $hasMwsCredentials) {
         return view('home');
       }
       else if(!$hasApiKey) {
