@@ -31,6 +31,12 @@ Route::get("/view-affiliate-id", function() {
 
 Auth::routes();
 
+Route::get('/mws', 'MwsController@showMwsForm');
+Route::post('/mws', 'MwsController@submit');
+
+Route::get('/mws/index', 'MwsController@showMwsIndex');
+
+
 Route::get('/subscribe', 'SubscribeController@showPaymentForm');
 Route::post('/subscribe', 'SubscribeController@subscribe');
 

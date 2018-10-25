@@ -25,7 +25,7 @@ class EtsyAPI
 
       $oauth = new \OAuth($this->apiKey, $this->secret);
       try {
-        $response = $oauth->getRequestToken("https://openapi.etsy.com/v2/oauth/request_token?scope=".$scope, route("finalizeAuthorization"));
+        $response = $oauth->getRequestToken("https://openapi.etsy.com/v2/oauth/request_token?scope=".$scope, route("finalizeAuthorization"), "GET");
         setcookie("token_secret", $response["oauth_token_secret"]);
         return $response["login_url"];
       }
@@ -38,7 +38,7 @@ class EtsyAPI
       $oauth = new \OAuth($this->apiKey, $this->secret);
       $oauth->setToken($token, $secret);
       try {
-        $response = $oauth->getAccessToken("https://openapi.etsy.com/v2/oauth/access_token", null, $verifier);
+        $response = $oauth->getAccessToken("https://openapi.etsy.com/v2/oauth/access_token", null, $verifier, "GET");
         $oauthToken = $response["oauth_token"];
         $oauthTokenSecret = $response["oauth_token_secret"];
         return ["token" => $oauthToken, "secret" => $oauthTokenSecret];
