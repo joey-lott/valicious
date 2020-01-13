@@ -24,6 +24,8 @@ class EtsyAPI
       $b = $this->secret;
 
       $oauth = new \OAuth($this->apiKey, $this->secret);
+      // temporarily disabling SSL checks for localhost - dev only
+      $oauth->disableSSLChecks();
       try {
         $response = $oauth->getRequestToken("https://openapi.etsy.com/v2/oauth/request_token?scope=".$scope, route("finalizeAuthorization"), "GET");
         setcookie("token_secret", $response["oauth_token_secret"]);
@@ -36,6 +38,9 @@ class EtsyAPI
 
     public function finalizeAuthorization($secret, $token, $verifier) {
       $oauth = new \OAuth($this->apiKey, $this->secret);
+      // temporarily disabling SSL checks for localhost - dev only
+      $oauth->disableSSLChecks();
+
       $oauth->setToken($token, $secret);
       try {
         $response = $oauth->getAccessToken("https://openapi.etsy.com/v2/oauth/access_token", null, $verifier, "GET");
@@ -70,7 +75,10 @@ class EtsyAPI
     }
 
     public function callOAuth($endpoint, $params, $method=OAUTH_HTTP_METHOD_POST, $requestEngineCurl = false, $returnJson = false) {
-      $oauth = new OAuth($this->apiKey, $this->secret, OAUTH_SIG_METHOD_HMACSHA1, OAUTH_AUTH_TYPE_URI);
+      $oauth = new OAuth($this->apiKey, $this->secret, OAUTH_SIG_METHOD_HMACSHA1, OAUTH_AUTH_TYPE_URI); 
+      // temporarily disabling SSL checks for localhost - dev only
+      $oauth->disableSSLChecks();
+
       $user = auth()->user();
       $etsyAuth = $user->etsyAuth;
       $oauth->setToken($etsyAuth->oauthToken, $etsyAuth->oauthTokenSecret);
@@ -79,7 +87,8 @@ class EtsyAPI
       }
       $url = "https://openapi.etsy.com/v2/".$endpoint;
       try{
-        if(count($params) == 0) {$params = null;}
+        // commenting following line of code because failing in php 7.2
+        //if(count($params) == 0) {$params = null;}
         $response = $oauth->fetch($url, $params, $method);
         $json = $oauth->getLastResponse();
         if($returnJson) return $json;
