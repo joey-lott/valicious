@@ -77,7 +77,7 @@ class EtsyAPI
     public function callOAuth($endpoint, $params, $method=OAUTH_HTTP_METHOD_POST, $requestEngineCurl = false, $returnJson = false) {
       $oauth = new OAuth($this->apiKey, $this->secret, OAUTH_SIG_METHOD_HMACSHA1, OAUTH_AUTH_TYPE_URI); 
       // temporarily disabling SSL checks for localhost - dev only
-      $oauth->disableSSLChecks();
+      //$oauth->disableSSLChecks();
 
       $user = auth()->user();
       $etsyAuth = $user->etsyAuth;

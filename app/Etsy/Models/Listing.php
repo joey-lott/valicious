@@ -15,13 +15,16 @@ class Listing extends EtsyModel{
   }
 
   public function getListingMainImage($pause = false) {
+
+    /*
+commenting this section because this was caching old images
     $listingImage = ListingImages::where("listingId", $this->id)->get()->first();
     if($listingImage != null) {
       // Image is stored in DB. Use that value and return early.
       $this->mainImageUrl = $listingImage->imageUrl;
       return;
     }
-
+    */
     $endpoint = "listings/".$this->id."?includes=MainImage";
     $response = $this->etsyApi->callOAuth($endpoint, null, OAUTH_HTTP_METHOD_GET);
     $listing = $response["results"][0];
