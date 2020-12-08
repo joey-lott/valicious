@@ -22,8 +22,8 @@ comment this section to prevent caching old images
     $listingImage = ListingImages::where("listingId", $this->id)->get()->first();
     if($listingImage != null && $listingImage != "") {
       // Image is stored in DB. Use that value and return early.
-      //$this->mainImageUrl = $listingImage->imageUrl;
-      //return;
+      $this->mainImageUrl = $listingImage->imageUrl;
+      return;
     }
     /*
     end of section to comment for image caching
