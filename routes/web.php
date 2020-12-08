@@ -4,6 +4,7 @@ use App\ListingImages;
 
 Route::get("/flush-cached-images", function() {
 	ListingImages::truncate();
+	dd(ListingImages::all());
 	dd("Image cache flushed");
 });
 
