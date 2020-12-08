@@ -1,5 +1,12 @@
 <?php
 
+use App\ListingImages;
+
+Route::get("/flush-cached-images" function() {
+	ListingImages::update("imageUrl", null);
+	dd("Image cache flushed");
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
