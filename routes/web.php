@@ -2,7 +2,7 @@
 
 use App\ListingImages;
 
-Route::get("/flush-cached-images" function() {
+Route::get("/flush-cached-images", function() {
 	ListingImages::update("imageUrl", null);
 	dd("Image cache flushed");
 });
