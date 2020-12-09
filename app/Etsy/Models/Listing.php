@@ -35,7 +35,6 @@ comment this section to prevent caching old images
       $this->mainImageUrl = $listing["MainImage"]["url_170x135"];
     }
     else {
-      dump($listing);
       $this->mainImageUrl = "";
     }
     $listingImage = new ListingImages();
