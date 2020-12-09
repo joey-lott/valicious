@@ -89,6 +89,12 @@ class EtsyAPI
       try{
         // commenting following line of code because failing in php 7.2
         //if(count($params) == 0) {$params = null;}
+        // commen lines below for production server. uncomment for local dev.
+        /*
+        $oauth->enableDebug();
+        $oauth->disableSSLChecks();
+        ini_set('max_execution_time', 300);
+        */
         $response = $oauth->fetch($url, $params, $method);
         $json = $oauth->getLastResponse();
         if($returnJson) return $json;
