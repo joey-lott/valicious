@@ -31,7 +31,9 @@ comment this section to prevent caching old images
     $endpoint = "listings/".$this->id."?includes=MainImage";
     $response = $this->etsyApi->callOAuth($endpoint, null, OAUTH_HTTP_METHOD_GET);
     $listing = $response["results"][0];
-    $this->mainImageUrl = $listing["MainImage"]["url_170x135"];
+    if(isset($listing["MainImage"])) {
+      $this->mainImageUrl = $listing["MainImage"]["url_170x135"];
+    }
     $listingImage = new ListingImages();
     $listingImage->listingId = $this->id;
     $listingImage->imageUrl = $this->mainImageUrl;
