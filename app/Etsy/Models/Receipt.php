@@ -81,7 +81,7 @@ class Receipt extends EtsyModel {
 
     // First, updte the receipt. Set was_shipped to true.
     $endpoint = "receipts/".$this->id;
-    $params = ["was_shipped" => "true"];
+    $params = ["was_shipped" => "true", "tracking_code" => $trackingNumber];
     $response = $this->etsyApi->callOAuth($endpoint, $params, OAUTH_HTTP_METHOD_PUT);
 
     // Next, set the tracking information
