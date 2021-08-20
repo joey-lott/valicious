@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ApiKeys;
 use App\EtsyAuth;
+use App\MwsCredentials;
 
 class HomeController extends Controller
 {
@@ -27,7 +28,8 @@ class HomeController extends Controller
     {
       $hasApiKey = ApiKeys::where("user_id", auth()->user()->id)->get()->count() > 0;
       $hasEtsyAuth = EtsyAuth::where("user_id", auth()->user()->id)->get()->count() > 0;
-      if($hasApiKey && $hasEtsyAuth) {
+      $hasMwsCredentials = MwsCredentials::where("user_id", auth()->user()->id)->get()->count() > 0;
+      if($hasApiKey && $hasEtsyAuth) { // don't require mws && $hasMwsCredentials) {
         return view('home');
       }
       else if(!$hasApiKey) {
@@ -35,6 +37,9 @@ class HomeController extends Controller
       }
       else if(!$hasEtsyAuth) {
         return redirect("authorize");
+      }
+      else if(!$hasMwsCredentials) {
+        return redirect("mws");
       }
     }
 }
